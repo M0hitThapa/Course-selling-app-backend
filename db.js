@@ -1,5 +1,8 @@
+require('dotenv').config();
+
 const mongoose = require("mongoose")
-mongoose.connect("")
+mongoose.connect(process.env.MONGO_URL)
+
 const Schema = mongoose.Schema;
 const ObjectId = mongoose.Types.ObjectId;
 const userSchema = Schema({
@@ -30,10 +33,10 @@ const purchaseSchema = Schema({
 })
 
 
-const userModel = mongoose.Model("user", userSchema);
-const adminModel = mongoose.Model("admin", adminSchema);
-const courseModel = mongoose.Model("course", courseSchema);
-const purchaseModel = mongoose.Model("purchase", purchaseSchema);
+const userModel = mongoose.model("user", userSchema);
+const adminModel = mongoose.model("admin", adminSchema);
+const courseModel = mongoose.model("course", courseSchema);
+const purchaseModel = mongoose.model("purchase", purchaseSchema);
 
 module.export = {
     userModel,
