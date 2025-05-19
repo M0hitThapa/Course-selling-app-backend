@@ -8,13 +8,13 @@ const ObjectId = mongoose.Types.ObjectId;
 const userSchema = Schema({
    
 email:{type:String, unique:true},
-passowrd:String,
+password:{type:String, required:true},
 firstName:String,
 lastName:String
 })
 const adminSchema = Schema({
      email:{type:String, unique:true},
-    passowrd:String,
+    password:String,
     firstName:String,
     lastName:String
 

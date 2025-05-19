@@ -3,12 +3,18 @@
 const { Router } = require("express")
 const userRouter = Router();
 const { userModel } = require("../db")
+const jwt = require("jsonwebtoken");
+const bcrypt = require("bcrypt");
+
+
 
 userRouter.post("/signup",async function(req,res) {
     const {email, password, firstName, lastName} = req.body;
+
+    const hashedPassword = await bcrypt.hash(password, 10);
       await userModel.create({
         email:email,
-        password:password,
+        password:hashedPassword,
         firstName:firstName,
         lastName:lastName,
         
@@ -23,13 +29,37 @@ userRouter.post('/signin', async function(req,res) {
 
    const user = await userModel.findOne({
     email:email,
-    password:password
+   
    });
 
-   if(user) {
-    res.send("user is there")
+   if(!user) {
+    return res.status(403).json({message:"Incorrect credentials"})
    }
-    res.send("login endpoint")
+
+   const Password = await bcrypt.compare(password, user.password);
+
+   if(!Password) {
+    return res.status(403).json({message:"Invalid credentials"})
+   }
+
+   const token = jwt.sign({id:user._id}, process.env.JWT_USER_PASSWORD, {
+    expiresIn:"1h",
+   })
+   res.json({token:token})
+
+//    if(user) {
+//    const token = jwt.sign({
+//     id:user._id
+//    }, process.env.JWT_USER_PASSWORD)
+//    res.json({
+//     token:token
+//    })
+//    } else {
+//     res.status(403).json({
+//         message:"Incorrect Credentials"
+//     })
+//    }
+   
 })
 
 
