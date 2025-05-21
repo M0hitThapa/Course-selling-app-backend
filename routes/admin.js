@@ -3,6 +3,8 @@ const jwt = require("jsonwebtoken")
 const adminRouter = Router()
 const {adminModel} = require("../db");
 const bcrypt = require("bcrypt")
+const jwtAdminPassword = require("../config");
+const { adminMiddleware } = require("../middleware/admin");
 
 adminRouter.post("/signup", async function(req,res) {
     const {email, password, firstName, lastName} = req.body;
@@ -35,7 +37,7 @@ adminRouter.post("/signin", async function(req,res) {
             message:"Invalid Credentials"
         })
     }
-    const token =  jwt.sign({id:admin._id}, process.env.JWT_USER_PASSWORD, {
+    const token =  jwt.sign({id:admin._id}, jwtAdminPassword, {
         expiresIn:"1h"
     })
 
@@ -47,7 +49,8 @@ adminRouter.post("/signin", async function(req,res) {
 
 
 
-adminRouter.post("/course", (req,res) => {
+adminRouter.post("/course",  (req,res) => {
+   
     res.send("admin course create portal")
 })
 

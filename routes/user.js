@@ -5,6 +5,7 @@ const userRouter = Router();
 const { userModel } = require("../db")
 const jwt = require("jsonwebtoken");
 const bcrypt = require("bcrypt");
+const jwtUserPassword = require("../config")
 
 
 
@@ -42,7 +43,7 @@ userRouter.post('/signin', async function(req,res) {
     return res.status(403).json({message:"Invalid credentials"})
    }
 
-   const token = jwt.sign({id:user._id}, process.env.JWT_USER_PASSWORD, {
+   const token = jwt.sign({id:user._id}, jwtUserPassword, {
     expiresIn:"1h",
    })
    res.json({token:token})
