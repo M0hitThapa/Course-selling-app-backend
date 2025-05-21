@@ -13,3 +13,4 @@ courseRouter.post("/purchase", (req,res) => {
 module.exports = {
     courseRouter:courseRouter
 }
+
