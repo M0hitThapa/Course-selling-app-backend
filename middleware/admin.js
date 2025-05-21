@@ -6,7 +6,7 @@ function adminMiddleware(req,res,next) {
     const decode = jwt.verify(token,jwtAdminPassword)
 
     if(decode) {
-        req.adminId = decode.id
+        req.userId = decode.id
         next()
     } else {
         res.status(403).json({

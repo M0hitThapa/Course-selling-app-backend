@@ -1,7 +1,7 @@
 const { Router } = require("express");
 const jwt = require("jsonwebtoken")
 const adminRouter = Router()
-const {adminModel} = require("../db");
+const {adminModel,courseModel} = require("../db");
 const bcrypt = require("bcrypt")
 const jwtAdminPassword = require("../config");
 const { adminMiddleware } = require("../middleware/admin");
@@ -49,17 +49,36 @@ adminRouter.post("/signin", async function(req,res) {
 
 
 
-adminRouter.post("/course",  (req,res) => {
-   
-    res.send("admin course create portal")
+adminRouter.post("/course",adminMiddleware, async function(req,res)  {
+    const adminId = req.userId;
+
+    const {title, description,imageUrl,price} = req.body;
+
+    const course = await courseModel.create({
+        title:title,
+        description:description,
+        imageUrl:imageUrl,
+        price:price,
+        creatorId:adminId
+ })
+
+ res.json({
+    message:"course created",
+    courseId:course._id
+ })
+
+})
+adminRouter.put("/course",  (req,res) => {
+
+
+
+    res.send("add course content through admin")
 })
 
 adminRouter.delete("/delete", (req,res) => {
     res.send("delete course admin")
 })
-adminRouter.put("/course", (req,res) => {
-    res.send("add course content through admin")
-})
+
 adminRouter.get("/course/bulk", (req,res) => {
     res.send("add course content through admin")
 })
