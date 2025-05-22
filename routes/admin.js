@@ -68,19 +68,37 @@ adminRouter.post("/course",adminMiddleware, async function(req,res)  {
  })
 
 })
-adminRouter.put("/course",  (req,res) => {
+adminRouter.put("/course",adminMiddleware, async function (req,res)  {
+const adminId = req.userId;
+const {title, description, price, imageUrl, courseId} = req.body;
 
-
-
-    res.send("add course content through admin")
+   const courseEdit = await courseModel.updateOne({ _id:courseId, creatorId:adminId}, {
+        title:title,
+        description:description,
+        imageUrl:imageUrl,  
+        price:price
+  
+ })
+res.json({
+    message:"course updated",
+    courseId :courseEdit._id
+})
 })
 
 adminRouter.delete("/delete", (req,res) => {
     res.send("delete course admin")
 })
 
-adminRouter.get("/course/bulk", (req,res) => {
-    res.send("add course content through admin")
+adminRouter.get("/course/bulk", async function(req,res) {
+
+    const adminId = req.userId;
+    const courses = await courseModel.find({
+        creatorId:adminId
+    })
+    res.json({
+        message:"courses",
+        courses
+    })
 })
 
 module.exports = {
